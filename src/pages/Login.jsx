@@ -1,12 +1,12 @@
 import React from "react";
-import DreacLogo from "../assets/dreca-logo.png";
+import DreacaLogo from "../assets/dreca-logo.png";
 import { BsGoogle, BsGithub } from "react-icons/bs";
 function Login() {
   return (
-    <div className="bg-gradient-to-br from-black via-black to-gray-800 w-full h-screen text-white ">
+    <div className="bg-gradient-to-br from-black to-gray-800 w-full h-screen text-white ">
       <div className="max-w-screen-lg flex items-center text-2xl md:text-4xl  h-1/6">
         <div className=" flex items-center p-0 m-4 cursor-pointer">
-          <img src={DreacLogo} alt="img" className="h-fit w-fit" />
+          <img src={DreacaLogo} alt="img" className="h-fit w-fit" />
           <p>DreCaLabs</p>
         </div>
       </div>
