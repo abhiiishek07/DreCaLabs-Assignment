@@ -20,13 +20,13 @@ function Login() {
             With our app, you can effortlessly manage your tasks, stay
             organized, and boost your productivity.
           </p>
-          <div className="flex flex-col mt-4 gap-4">
-            <button className="py-4 flex justify-center items-center gap-3 border-2 rounded-md hover:text-black hover:bg-white">
+          <div className="flex flex-col xl:flex-row justify-around items-center gap-4">
+            <button className="py-4 flex justify-center items-center gap-3 border-2 rounded-md hover:text-black hover:bg-white w-full xl:w-1/2">
               {" "}
               <BsGoogle />
               Sign In With Google
             </button>
-            <button className="py-4 flex justify-center items-center gap-3 border-2 rounded-md hover:text-black hover:bg-white">
+            <button className="py-4 flex justify-center items-center gap-3 border-2 rounded-md hover:text-black hover:bg-white w-full xl:w-1/2">
               <BsGithub />
               Sign In With Github
             </button>
