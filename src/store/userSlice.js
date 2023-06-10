@@ -1,18 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { act } from "react-dom/test-utils";
 const userSlice = createSlice({
   name: "user",
   //   initialState: localStorage.getItem("getAuth")
   //     ? JSON.parse(localStorage.getItem("getAuth"))
   //     : [],
-  initialState: [],
+  initialState: { user: null },
   reducers: {
     addUser(state, action) {
       //   localStorage.setItem("getAuth", JSON.stringify([action.payload]));
-      return (state = action.payload);
+      console.log("in user slice", action.payload);
+      state.user = action.payload;
     },
     removeUser(state, action) {
       //   localStorage.removeItem("getAuth");
-      return (state = action.payload);
+      state.user = null;
     },
   },
 });

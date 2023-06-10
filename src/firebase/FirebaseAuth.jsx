@@ -29,7 +29,7 @@ export const signInWithGithub = () => {
   signInWithPopup(auth, githubProvider);
 };
 // export const signOutFromGoogle = () => {
-//   signOut(auth, provider);
+//   signOut(auth, goo);
 // };
 // export const signInAsGuest = () => {
 //   signInAnonymously(auth, provider);

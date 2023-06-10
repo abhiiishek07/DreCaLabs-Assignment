@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import DreacaLogo from "../assets/dreca-logo.png";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router";
+import { auth } from "../firebase/FirebaseAuth";
 function Navbar() {
   const [crossBar, setCrossBar] = useState(false);
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ function Navbar() {
     {
       id: 3,
       link: "Logout",
-      func: () => console.log("logging out"),
+      func: () => auth.signOut(),
     },
   ];
   return (

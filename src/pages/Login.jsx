@@ -6,17 +6,6 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { addUser } from "../store/userSlice";
 function Login() {
-  const auth = getAuth();
-  const dispatch = useDispatch();
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        dispatch(addUser(user.uid));
-      } else {
-        console.log("no user");
-      }
-    });
-  }, []);
   return (
     <div className="bg-gradient-to-br from-black to-gray-800 w-full h-screen text-white ">
       <div className="max-w-screen-lg flex items-center text-2xl md:text-4xl  h-1/6">

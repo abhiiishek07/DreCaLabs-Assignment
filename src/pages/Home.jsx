@@ -51,6 +51,11 @@ function Home() {
                 </div>
               </div>
             )}
+            {tasks.length === 0 && (
+              <p className="text-3xl flex relative left-0 xl:left-64 top-44">
+                Oops! No task available
+              </p>
+            )}
             {tasks.map((task) => {
               return (
                 <div
