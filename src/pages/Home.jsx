@@ -6,7 +6,7 @@ function Home() {
   return (
     <>
       <Navbar />
-      <div className="h-fit min-h-screen  w-full bg-gradient-to-b from-black via-black to-gray-800">
+      <div className="h-fit min-h-screen  w-full bg-gradient-to-br from-black via-black to-gray-800">
         <div className="h-auto max-w-screen-lg mx-auto flex text-white flex-col">
           <div
             className="mt-28 ml-4 my-3 cursor-pointer hover:scale-105 duration-500  rounded-md border-dashed border-2 border-gray-300  h-10 flex justify-center items-center w-28 text-white"
