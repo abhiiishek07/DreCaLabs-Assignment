@@ -23,7 +23,6 @@ function Home() {
                 className="p-2 bg-transparent border-2 rounded-md text-white focus:outline-none "
               />
             )}
-
             <div className="w-full cursor-pointer hover:scale-105 duration-500 min-h-[4rem] h-auto  flex justify-start items-center p-2 rounded-md border-2 border-gray-500 shadow-md hover:bg-white hover:text-black">
               <p className="truncate  hover:text-clip hover:whitespace-normal ">
                 {" "}
@@ -36,8 +35,24 @@ function Home() {
               </p>
             </div>
             <div className="w-full cursor-pointer hover:scale-105 duration-500 h-16 flex justify-start items-center p-2 rounded-md border-2 border-gray-500 shadow-md hover:bg-white hover:text-black">
-              jkdh fjkshkj kdhjkodgheorghji
+              <p className="truncate  hover:text-clip hover:whitespace-normal ">
+                {" "}
+                hkj kdhjkodgheorghj
+              </p>
             </div>
+            <div className="w-full cursor-pointer hover:scale-105 duration-500 h-16 flex justify-start items-center p-2 rounded-md border-2 border-gray-500 shadow-md hover:bg-white hover:text-black">
+              <p className="truncate  hover:text-clip hover:whitespace-normal ">
+                {" "}
+                hkj kdhjkodgheorghj
+              </p>
+            </div>
+            <div className="w-full cursor-pointer hover:scale-105 duration-500 h-16 flex justify-start items-center p-2 rounded-md border-2 border-gray-500 shadow-md hover:bg-white hover:text-black">
+              <p className="truncate  hover:text-clip hover:whitespace-normal ">
+                {" "}
+                hkj kdhjkodgheorghj
+              </p>
+            </div>
+
             <div className="w-full cursor-pointer hover:scale-105 duration-500 h-16 flex justify-start items-center p-2 rounded-md border-2 border-gray-500 shadow-md hover:bg-white hover:text-black">
               jkdh fjkshkj kdhjkodgheorghji
             </div>
