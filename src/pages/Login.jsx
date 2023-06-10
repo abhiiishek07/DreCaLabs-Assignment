@@ -1,7 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import DreacaLogo from "../assets/dreca-logo.png";
 import { BsGoogle, BsGithub } from "react-icons/bs";
+import { signInWithGoogle, signInWithGithub } from "../firebase/FirebaseAuth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { addUser } from "../store/userSlice";
 function Login() {
+  const auth = getAuth();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        dispatch(addUser(user.uid));
+      } else {
+        console.log("no user");
+      }
+    });
+  }, []);
   return (
     <div className="bg-gradient-to-br from-black to-gray-800 w-full h-screen text-white ">
       <div className="max-w-screen-lg flex items-center text-2xl md:text-4xl  h-1/6">
@@ -21,12 +36,18 @@ function Login() {
             organized, and boost your productivity.
           </p>
           <div className="flex flex-col xl:flex-row justify-around items-center gap-4">
-            <button className="py-4 flex justify-center items-center gap-3 border-2 rounded-md hover:text-black hover:bg-white w-full xl:w-1/2">
+            <button
+              className="py-4 flex justify-center items-center gap-3 border-2 rounded-md hover:text-black hover:bg-white w-full xl:w-1/2"
+              onClick={signInWithGoogle}
+            >
               {" "}
               <BsGoogle />
               Sign In With Google
             </button>
-            <button className="py-4 flex justify-center items-center gap-3 border-2 rounded-md hover:text-black hover:bg-white w-full xl:w-1/2">
+            <button
+              className="py-4 flex justify-center items-center gap-3 border-2 rounded-md hover:text-black hover:bg-white w-full xl:w-1/2"
+              onClick={signInWithGithub}
+            >
               <BsGithub />
               Sign In With Github
             </button>
