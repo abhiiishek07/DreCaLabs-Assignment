@@ -15,6 +15,8 @@ import {
   updateDoc,
   setDoc,
 } from "firebase/firestore";
+import { MdArchive, MdUnarchive } from "react-icons/md";
+import { AiOutlineEye } from "react-icons/ai";
 function Home() {
   const [addNote, setAddNote] = useState(false);
   const user = useSelector((state) => state.user);
@@ -103,12 +105,18 @@ function Home() {
               return (
                 <div
                   key={item.id}
-                  className="w-full cursor-pointer hover:scale-105 duration-500 min-h-[4rem] h-auto  flex justify-start items-center p-2 rounded-md border-2 border-gray-500 shadow-md hover:bg-white hover:text-black  hover:text-clip hover:whitespace-normal"
+                  className="w-full cursor-pointer hover:scale-105 duration-500 min-h-[4rem] h-auto  flex justify-start items-center p-2 rounded-md border-2 border-gray-500 shadow-md hover:bg-white hover:text-black "
                 >
-                  <p className="truncate  hover:text-clip hover:whitespace-normal ">
-                    {" "}
-                    {item.title}
-                  </p>
+                  <div className="w-[78%] md:w-[88%] lg:w-[92%] mr-2">
+                    <p className="truncate  hover:text-clip hover:whitespace-normal ">
+                      {" "}
+                      {item.title}
+                    </p>
+                  </div>
+                  <div className="flex justify-center items-center gap-2 md:gap-4 ">
+                    <MdArchive size={22} />
+                    <AiOutlineEye size={22} />
+                  </div>
                 </div>
               );
             })}
