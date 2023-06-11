@@ -1,20 +1,62 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { BiMessageSquareAdd, BiMessageSquareX } from "react-icons/bi";
-
+import { db } from "../firebase/FirebaseAuth";
+import { QuerySnapshot } from "firebase/firestore";
+import { useSelector } from "react-redux";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDoc,
+  getDocs,
+  doc,
+  updateDoc,
+  setDoc,
+} from "firebase/firestore";
 function Home() {
   const [addNote, setAddNote] = useState(false);
-  const [tasks, setTasks] = useState([]);
+  const user = useSelector((state) => state.user);
+
+  const [items, setItems] = useState([]);
   const [msg, setMsg] = useState("");
-  const handleAddMsg = () => {
-    const newItem = {
-      id: Date.now(),
-      message: msg,
-    };
-    tasks.unshift(newItem);
-    setTasks(tasks);
-    setAddNote(!addNote);
+
+  const fetchItems = async () => {
+    const db = getFirestore();
+    const itemsCollectionRef = collection(db, "users", user.user.uid, "items");
+    const q = query(itemsCollectionRef, where("archived", "==", false));
+
+    try {
+      const querySnapshot = await getDocs(q);
+      const fetchedItems = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setItems(fetchedItems);
+    } catch (error) {
+      console.error("Error retrieving items:", error);
+    }
   };
+  const createItem = async () => {
+    const newItem = { id: Date.now(), title: msg, archived: false };
+    const db = getFirestore();
+    const itemsCollectionRef = collection(db, "users", user.user.uid, "items");
+
+    try {
+      await setDoc(doc(itemsCollectionRef, newItem.id.toString()), newItem);
+      setMsg("");
+      setAddNote(!addNote);
+      fetchItems();
+    } catch (error) {
+      console.error("Error adding item:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -41,7 +83,7 @@ function Home() {
                   <BiMessageSquareAdd
                     size={30}
                     className="cursor-pointer"
-                    onClick={handleAddMsg}
+                    onClick={createItem}
                   />
                   <BiMessageSquareX
                     size={30}
@@ -51,20 +93,21 @@ function Home() {
                 </div>
               </div>
             )}
-            {tasks.length === 0 && (
+            {items.length === 0 && (
               <p className="text-3xl flex relative left-0 xl:left-64 top-44">
                 Oops! No task available
               </p>
             )}
-            {tasks.map((task) => {
+            {items.map((item) => {
+              console.log(item);
               return (
                 <div
-                  key={task.id}
+                  key={item.id}
                   className="w-full cursor-pointer hover:scale-105 duration-500 min-h-[4rem] h-auto  flex justify-start items-center p-2 rounded-md border-2 border-gray-500 shadow-md hover:bg-white hover:text-black  hover:text-clip hover:whitespace-normal"
                 >
                   <p className="truncate  hover:text-clip hover:whitespace-normal ">
                     {" "}
-                    {task.message}
+                    {item.title}
                   </p>
                 </div>
               );

@@ -5,7 +5,6 @@ import {
   GoogleAuthProvider,
   GithubAuthProvider,
   signInWithPopup,
-  signOut,
 } from "firebase/auth";
 const firebaseConfig = {
   apiKey: "AIzaSyBPeQNcyiKMfn1I6xWvYFxGNsHYHM5i3Wk",

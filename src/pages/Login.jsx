@@ -1,10 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import DreacaLogo from "../assets/dreca-logo.png";
 import { BsGoogle, BsGithub } from "react-icons/bs";
 import { signInWithGoogle, signInWithGithub } from "../firebase/FirebaseAuth";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { useDispatch } from "react-redux";
-import { addUser } from "../store/userSlice";
+
 function Login() {
   return (
     <div className="bg-gradient-to-br from-black to-gray-800 w-full h-screen text-white ">
