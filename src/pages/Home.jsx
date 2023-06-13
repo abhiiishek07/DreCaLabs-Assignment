@@ -6,31 +6,27 @@ import { useSelector } from "react-redux";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
-import Slide from "@mui/material/Slide";
 import Box from "@mui/material/Box";
 import {
   getFirestore,
   collection,
   query,
   where,
-  getDoc,
   getDocs,
   doc,
   updateDoc,
   setDoc,
 } from "firebase/firestore";
-import { MdArchive, MdUnarchive, MdOutlineEdit } from "react-icons/md";
-import { AiOutlineEye } from "react-icons/ai";
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { MdArchive, MdOutlineEdit } from "react-icons/md";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+
 function Home() {
   const [addNote, setAddNote] = useState(false);
   const user = useSelector((state) => state.user);
   const [items, setItems] = useState([]);
   const [msg, setMsg] = useState("");
   const [open, setOpen] = React.useState(false);
-  const [selectedItem, setSelectedItem] = useState({ id: 123, title: "" });
+  const [selectedItem, setSelectedItem] = useState({ id: null, title: "" });
   const valueRef = useRef();
   const handleClickOpen = () => {
     setOpen(true);
@@ -54,6 +50,7 @@ function Home() {
     boxShadow: 24,
     p: 4,
   };
+
   const fetchItems = async () => {
     const db = getFirestore();
     const itemsCollectionRef = collection(db, "users", user.user.uid, "items");
@@ -75,7 +72,12 @@ function Home() {
       setAddNote(!addNote);
       return;
     }
-    const newItem = { id: Date.now(), title: msg, archived: false };
+    const newItem = {
+      id: Date.now(),
+      title: msg,
+      archived: false,
+      publicView: true,
+    };
     const db = getFirestore();
     const itemsCollectionRef = collection(db, "users", user.user.uid, "items");
 
@@ -113,7 +115,18 @@ function Home() {
       console.error("Error archiving item:", error);
     }
   };
+  const handlePublicView = async (itemId, value) => {
+    const id = itemId.toString();
+    const itemRef = doc(db, "users", user.user.uid, "items", id);
 
+    try {
+      await updateDoc(itemRef, { publicView: value });
+      console.log("Item view chnaged successfully.");
+      fetchItems();
+    } catch (error) {
+      console.error("Error :", error);
+    }
+  };
   useEffect(() => {
     fetchItems();
   }, []);
@@ -132,11 +145,11 @@ function Home() {
 
           <div className="my-4 h-full flex flex-col mx-4 gap-6">
             {addNote && (
-              <div className="flex">
+              <div className="flex  xl:w-[66.5rem]">
                 <textarea
                   placeholder="Enter Your Message"
                   rows="2"
-                  className="p-2 bg-transparent border-2 rounded-md text-white focus:outline-none w-full mr-1"
+                  className="p-2 w-full bg-transparent border-2 rounded-md text-white focus:outline-none mr-1"
                   onChange={(e) => setMsg(e.target.value)}
                 />
 
@@ -154,11 +167,6 @@ function Home() {
                 </div>
               </div>
             )}
-            {items.length === 0 && (
-              <p className="text-3xl flex relative left-0 xl:left-64 top-44">
-                Oops! No task available
-              </p>
-            )}
             {items.map((item) => {
               console.log(item);
               return (
@@ -172,14 +180,6 @@ function Home() {
                       {item.title}
                     </p>
                   </div>
-                  {/* <div className="w-[72%] md:w-[88%] lg:w-[90%] mr-3">
-                    <input
-                      type="text"
-                      className="truncate  hover:text-clip hover:whitespace-normal bg-transparent border-none h-full"
-                      value={item.title}
-                      onChange={(e) => console.log(e.target.value)}
-                    />
-                  </div> */}
                   <div className="flex justify-center items-center gap-2 ">
                     <MdOutlineEdit
                       size={20}
@@ -189,7 +189,17 @@ function Home() {
                       }}
                     />
                     <MdArchive size={20} onClick={() => archiveItem(item.id)} />
-                    <AiOutlineEye size={20} />
+                    {item.publicView ? (
+                      <AiOutlineEye
+                        size={20}
+                        onClick={() => handlePublicView(item.id, false)}
+                      />
+                    ) : (
+                      <AiOutlineEyeInvisible
+                        size={20}
+                        onClick={() => handlePublicView(item.id, true)}
+                      />
+                    )}
                   </div>
                 </div>
               );
