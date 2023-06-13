@@ -172,7 +172,7 @@ function Home() {
               return (
                 <div
                   key={item.id}
-                  className="w-full cursor-pointer hover:scale-105 duration-500 min-h-[4rem] h-auto  flex justify-start items-center p-2 rounded-md border-2 border-gray-500 shadow-md hover:bg-white hover:text-black "
+                  className="w-full cursor-pointer hover:scale-105 duration-500 min-h-[4rem] h-auto  flex justify-start items-center p-2 rounded-md border-2 border-gray-500 shadow-md lg:hover:bg-white md:hover:text-black "
                 >
                   <div className="w-[72%] md:w-[88%] lg:w-[90%] mr-3">
                     <p className="truncate  hover:text-clip hover:whitespace-normal ">
