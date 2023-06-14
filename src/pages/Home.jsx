@@ -26,7 +26,7 @@ function Home() {
   console.log("home user", user.user.uid);
   const [items, setItems] = useState([]);
   const [msg, setMsg] = useState("");
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false); // for mui modal box to
   const [selectedItem, setSelectedItem] = useState({ id: null, title: "" });
   const valueRef = useRef();
   const handleClickOpen = () => {

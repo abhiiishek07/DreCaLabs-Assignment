@@ -21,16 +21,18 @@ export const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
 
-export const signInWithGoogle = () => {
-  signInWithPopup(auth, googleProvider);
+export const signInWithGoogle = (onSuccess) => {
+  signInWithPopup(auth, googleProvider)
+    .then((result) => {
+      // Handle successful login
+      onSuccess();
+    })
+    .catch((error) => {
+      // Handle error
+      console.log(error);
+    });
 };
 export const signInWithGithub = () => {
   signInWithPopup(auth, githubProvider);
 };
-// export const signOutFromGoogle = () => {
-//   signOut(auth, goo);
-// };
-// export const signInAsGuest = () => {
-//   signInAnonymously(auth, provider);
-// };
 export const db = getFirestore(app);
