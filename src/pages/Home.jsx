@@ -109,7 +109,7 @@ function Home() {
     const itemRef = doc(db, "users", user.user.uid, "items", id);
 
     try {
-      await updateDoc(itemRef, { archived: true });
+      await updateDoc(itemRef, { archived: true, publicView: false }); //if item is archived then it will be not shown in public page also
       console.log("Item archived successfully.");
       fetchItems();
     } catch (error) {
