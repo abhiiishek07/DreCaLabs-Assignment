@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { act } from "react-dom/test-utils";
 const userSlice = createSlice({
   name: "user",
   //   initialState: localStorage.getItem("getAuth")

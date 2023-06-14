@@ -23,6 +23,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 function Home() {
   const [addNote, setAddNote] = useState(false);
   const user = useSelector((state) => state.user);
+  console.log("home user", user.user.uid);
   const [items, setItems] = useState([]);
   const [msg, setMsg] = useState("");
   const [open, setOpen] = React.useState(false);
@@ -52,19 +53,19 @@ function Home() {
   };
 
   const fetchItems = async () => {
-    const db = getFirestore();
     const itemsCollectionRef = collection(db, "users", user.user.uid, "items");
     const q = query(itemsCollectionRef, where("archived", "==", false));
 
     try {
       const querySnapshot = await getDocs(q);
+      console.log("home");
       const fetchedItems = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
       setItems(fetchedItems);
     } catch (error) {
-      console.error("Error retrieving items:", error);
+      console.error("Error retrieving items in home:", error);
     }
   };
   const createItem = async () => {

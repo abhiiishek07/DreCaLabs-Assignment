@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import Navbar from "../components/Navbar";
-import { db } from "../firebase/FirebaseAuth";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   getFirestore,
   collection,
@@ -11,15 +12,19 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-import { MdUnarchive, MdOutlineEdit } from "react-icons/md";
+import { useParams } from "react-router-dom";
+import { db, auth } from "../firebase/FirebaseAuth";
 
-function Archives() {
+function PublicItems() {
   const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const { userId } = useParams();
   const [items, setItems] = useState([]);
 
   const fetchItems = async () => {
-    const itemsCollectionRef = collection(db, "users", user.user.uid, "items");
-    const q = query(itemsCollectionRef, where("archived", "==", true));
+    const db = getFirestore();
+    const itemsCollectionRef = collection(db, "users", userId, "items");
+    const q = query(itemsCollectionRef, where("publicView", "==", true));
 
     try {
       const querySnapshot = await getDocs(q);
@@ -32,17 +37,25 @@ function Archives() {
       console.error("Error retrieving items:", error);
     }
   };
+  const handleLike = async (itemId, val) => {
+    if (!user.user) {
+      const loginRedirectUrl = `/?redirect=${encodeURIComponent(
+        window.location.pathname
+      )}`;
+      console.log("redirected url", loginRedirectUrl);
+      navigate(loginRedirectUrl);
+    } else {
+      const id = itemId.toString();
+      const itemRef = doc(db, "users", userId, "items", id);
+      console.log("yop");
 
-  const unArchiveItem = async (itemId) => {
-    const id = itemId.toString();
-    const itemRef = doc(db, "users", user.user.uid, "items", id);
-
-    try {
-      await updateDoc(itemRef, { archived: false });
-      console.log("Item archived successfully.");
-      fetchItems();
-    } catch (error) {
-      console.error("Error archiving item:", error);
+      try {
+        await updateDoc(itemRef, { liked: val });
+        console.log("Item liked successfully.");
+        fetchItems();
+      } catch (error) {
+        console.error("Error liking item:", error);
+      }
     }
   };
 
@@ -56,7 +69,7 @@ function Archives() {
         <div className="h-auto max-w-screen-lg mx-auto flex text-white flex-col">
           <div className="my-4 h-full flex flex-col mx-4 gap-6">
             <div className="mt-28 my-3 text-2xl border-dashed border-b-2 border-gray-300 h-10 flex items-end w-fit  text-white ">
-              Archived items
+              Public Tasks :
             </div>
             {items.map((item) => {
               return (
@@ -71,10 +84,18 @@ function Archives() {
                     </p>
                   </div>
                   <div className="flex justify-end items-center ">
-                    <MdUnarchive
-                      size={20}
-                      onClick={() => unArchiveItem(item.id)}
-                    />
+                    {item.liked ? (
+                      <AiFillHeart
+                        size={20}
+                        color="red"
+                        onClick={() => handleLike(item.id, false)}
+                      />
+                    ) : (
+                      <AiOutlineHeart
+                        size={20}
+                        onClick={() => handleLike(item.id, true)}
+                      />
+                    )}
                   </div>
                 </div>
               );
@@ -86,4 +107,4 @@ function Archives() {
   );
 }
 
-export default Archives;
+export default PublicItems;

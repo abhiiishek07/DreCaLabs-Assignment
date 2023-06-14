@@ -1,24 +1,29 @@
 import { useState, useEffect } from "react";
-import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Archives from "./pages/Archives";
-import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  BrowserRouter,
+  Navigate,
+  useNavigate,
+  URLSearchParams,
+} from "react-router-dom";
 import { useSelector } from "react-redux";
 import Loading from "./components/Loading";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { addUser, removeUser } from "./store/userSlice";
+import PublicItems from "./pages/PublicItems";
 function App() {
   const user = useSelector((state) => state.user);
   const [loading, setLoading] = useState(true);
-  console.log(user);
   const auth = getAuth();
   const dispatch = useDispatch();
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      // setLoading(true);
-      console.log("app", auth);
       if (user) {
         console.log("in app", user);
         dispatch(addUser(user));
@@ -37,13 +42,32 @@ function App() {
         {!user.user ? (
           <>
             <Routes>
-              <Route path="/" element={<Login />} />
+              <Route
+                path="/user/:userId"
+                element={
+                  <PublicItems state={{ redirect: window.location.pathname }} />
+                }
+              />
+              <Route
+                path="/"
+                element={<Login />}
+                state={{ redirect: window.location.pathname }}
+              />
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
           </>
         ) : (
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route
+              path="/user/:userId"
+              element={<PublicItems />}
+              state={{ redirect: window.location.pathname }}
+            />
+            <Route
+              path="/"
+              element={<Home />}
+              state={{ redirect: window.location.pathname }}
+            />
             <Route path="/archives" element={<Archives />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>

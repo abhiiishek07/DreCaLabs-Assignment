@@ -1,9 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import DreacaLogo from "../assets/dreca-logo.png";
 import { BsGoogle, BsGithub } from "react-icons/bs";
 import { signInWithGoogle, signInWithGithub } from "../firebase/FirebaseAuth";
-
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { auth } from "../firebase/FirebaseAuth";
 function Login() {
+  console.log(auth);
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  //   useEffect(() => {
+  //     // Store the redirect path in localStorage before redirecting to login
+  //     const redirect = searchParams.get("redirect");
+  //     console.log("redirect ia", redirect);
+  //     if (redirect) {
+  //       console.log("redirect ia", redirect);
+  //       navigate(redirect);
+  //     }
+  //   }, [auth.onAuthStateChanged]);
+
+  const handleLoginSuccess = () => {
+    const redirectPath = localStorage.getItem("redirectPath");
+    localStorage.removeItem("redirectPath");
+    console.log("login ss");
+    if (redirectPath) {
+      navigate(redirectPath);
+    } else {
+      navigate("/");
+    }
+  };
   return (
     <div className="bg-gradient-to-br from-black to-gray-800 w-full h-screen text-white ">
       <div className="max-w-screen-lg flex items-center text-2xl md:text-4xl  h-1/6">
@@ -25,7 +49,7 @@ function Login() {
           <div className="flex flex-col xl:flex-row justify-around items-center gap-4">
             <button
               className="py-4 flex justify-center items-center gap-3 border-2 rounded-md hover:text-black hover:bg-white w-full xl:w-1/2"
-              onClick={signInWithGoogle}
+              onClick={() => signInWithGoogle(handleLoginSuccess)}
             >
               {" "}
               <BsGoogle />
