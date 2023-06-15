@@ -33,6 +33,14 @@ export const signInWithGoogle = (onSuccess) => {
     });
 };
 export const signInWithGithub = () => {
-  signInWithPopup(auth, githubProvider);
+  signInWithPopup(auth, githubProvider)
+    .then((result) => {
+      // Handle successful login
+      onSuccess();
+    })
+    .catch((error) => {
+      // Handle error
+      console.log(error);
+    });
 };
 export const db = getFirestore(app);
