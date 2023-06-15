@@ -8,17 +8,9 @@ function Login() {
   console.log(auth.currentUser);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  useEffect(() => {
-    // Store the redirect path in localStorage before redirecting to login
-    const redirect = searchParams.get("redirect");
-    if (redirect) {
-      localStorage.setItem("redirectPath", redirect);
-    }
-  }, []);
-  const handleLoginSuccess = () => {
-    const redirectPath = localStorage.getItem("redirectPath");
-    localStorage.removeItem("redirectPath");
 
+  const handleLoginSuccess = () => {
+    const redirectPath = searchParams.get("redirect");
     if (redirectPath) {
       navigate(redirectPath);
     } else {
