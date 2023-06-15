@@ -65,7 +65,7 @@ function PublicItems() {
   return (
     <>
       <Navbar />
-      <div className="h-fit min-h-screen  w-full bg-gradient-to-br from-black via-black to-gray-950">
+      <div className="h-fit min-h-screen w-full bg-gradient-to-br from-black via-black to-gray-950">
         <div className="h-auto max-w-screen-lg mx-auto flex text-white flex-col">
           <div className="my-4 h-full flex flex-col mx-4 gap-6">
             <div className="mt-28 my-3 text-2xl border-dashed border-b-2 border-gray-300 h-10 flex items-end w-fit  text-white ">

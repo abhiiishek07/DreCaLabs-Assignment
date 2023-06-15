@@ -5,7 +5,7 @@ import { signInWithGoogle, signInWithGithub } from "../firebase/FirebaseAuth";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { auth } from "../firebase/FirebaseAuth";
 function Login() {
-  console.log(auth);
+  console.log(auth.currentUser);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   useEffect(() => {
