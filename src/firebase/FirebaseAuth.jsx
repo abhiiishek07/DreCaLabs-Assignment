@@ -32,7 +32,7 @@ export const signInWithGoogle = (onSuccess) => {
       console.log(error);
     });
 };
-export const signInWithGithub = () => {
+export const signInWithGithub = (onSuccess) => {
   signInWithPopup(auth, githubProvider)
     .then((result) => {
       // Handle successful login

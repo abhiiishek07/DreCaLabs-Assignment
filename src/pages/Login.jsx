@@ -54,7 +54,7 @@ function Login() {
             </button>
             <button
               className="py-4 flex justify-center items-center gap-3 border-2 rounded-md hover:text-black hover:bg-white w-full xl:w-1/2"
-              onClick={signInWithGithub(handleLoginSuccess)}
+              onClick={() => signInWithGithub(handleLoginSuccess)}
             >
               <BsGithub />
               Sign In With Github
