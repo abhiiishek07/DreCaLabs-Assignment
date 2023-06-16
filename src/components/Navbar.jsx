@@ -3,11 +3,9 @@ import DreacaLogo from "../assets/dreca-logo.png";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import { auth } from "../firebase/FirebaseAuth";
-import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 function Navbar() {
   const [crossBar, setCrossBar] = useState(false);
-  const [activeVal, setActiveVal] = useState("");
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
   const links = [
@@ -29,9 +27,6 @@ function Navbar() {
       func: () => auth.signOut(),
     },
   ];
-  const handleActiveVal = (val) => {
-    setActiveVal(true);
-  };
   return (
     <div className="flex justify-between items-center w-full h-20 text-white fixed bg-black px-0 md:px-4 ">
       <div
@@ -55,20 +50,6 @@ function Navbar() {
             );
           })}
       </ul>
-      {/* <div className="hidden md:flex gap-4 md:mr-14 md:gap-12  w-fit">
-        {links.map(({ id, link, func }) => {
-          return (
-            <Link
-              key={id}
-              to={link}
-              className=" cursor-pointer font-bold text-gray-500 hover:scale-105 duration-200  active:text-blue-500 "
-              onClick={func}
-            >
-              {link}{" "}
-            </Link>
-          );
-        })}
-      </div> */}
       {user.user && (
         <>
           <div

@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { db } from "../firebase/FirebaseAuth";
 import { useSelector } from "react-redux";
 import {
-  getFirestore,
   collection,
   query,
   where,
@@ -11,7 +10,7 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-import { MdUnarchive, MdOutlineEdit } from "react-icons/md";
+import { MdUnarchive } from "react-icons/md";
 
 function Archives() {
   const user = useSelector((state) => state.user);

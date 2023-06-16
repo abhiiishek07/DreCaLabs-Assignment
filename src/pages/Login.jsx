@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import DreacaLogo from "../assets/dreca-logo.png";
 import { BsGoogle, BsGithub } from "react-icons/bs";
 import { signInWithGoogle, signInWithGithub } from "../firebase/FirebaseAuth";

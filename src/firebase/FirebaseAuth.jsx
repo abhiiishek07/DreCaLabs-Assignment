@@ -23,23 +23,19 @@ const githubProvider = new GithubAuthProvider();
 
 export const signInWithGoogle = (onSuccess) => {
   signInWithPopup(auth, googleProvider)
-    .then((result) => {
-      // Handle successful login
+    .then(() => {
       onSuccess();
     })
     .catch((error) => {
-      // Handle error
       console.log(error);
     });
 };
 export const signInWithGithub = (onSuccess) => {
   signInWithPopup(auth, githubProvider)
-    .then((result) => {
-      // Handle successful login
+    .then(() => {
       onSuccess();
     })
     .catch((error) => {
-      // Handle error
       console.log(error);
     });
 };
