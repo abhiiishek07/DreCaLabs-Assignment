@@ -2,14 +2,7 @@ import { useState, useEffect } from "react";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Archives from "./pages/Archives";
-import {
-  Routes,
-  Route,
-  BrowserRouter,
-  Navigate,
-  useNavigate,
-  URLSearchParams,
-} from "react-router-dom";
+import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Loading from "./components/Loading";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -26,6 +19,7 @@ function App() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         console.log("in app", user);
+        user.getIdTokenResult().then((token) => console.log("token is", token));
         dispatch(addUser(user));
       } else {
         dispatch(removeUser());
@@ -42,32 +36,15 @@ function App() {
         {!user.user ? (
           <>
             <Routes>
-              <Route
-                path="/user/:userId"
-                element={
-                  <PublicItems state={{ redirect: window.location.pathname }} />
-                }
-              />
-              <Route
-                path="/"
-                element={<Login />}
-                state={{ redirect: window.location.pathname }}
-              />
+              <Route path="/user/:userId" element={<PublicItems />} />
+              <Route path="/" element={<Login />} />
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
           </>
         ) : (
           <Routes>
-            <Route
-              path="/user/:userId"
-              element={<PublicItems />}
-              state={{ redirect: window.location.pathname }}
-            />
-            <Route
-              path="/"
-              element={<Home />}
-              state={{ redirect: window.location.pathname }}
-            />
+            <Route path="/user/:userId" element={<PublicItems />} />
+            <Route path="/" element={<Home />} />
             <Route path="/archives" element={<Archives />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
