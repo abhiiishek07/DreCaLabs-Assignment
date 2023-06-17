@@ -1,47 +1,44 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-import { db } from "../firebase/FirebaseAuth";
+// import { db } from "../firebase/FirebaseAuth";
 import { useSelector } from "react-redux";
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-  doc,
-  updateDoc,
-} from "firebase/firestore";
+// import {
+//   collection,
+//   query,
+//   where,
+//   getDocs,
+//   doc,
+//   updateDoc,
+// } from "firebase/firestore";
 import { MdUnarchive } from "react-icons/md";
+import axios from "axios";
 
 function Archives() {
   const user = useSelector((state) => state.user);
   const [items, setItems] = useState([]);
 
   const fetchItems = async () => {
-    const itemsCollectionRef = collection(db, "users", user.user.uid, "items");
-    const q = query(itemsCollectionRef, where("archived", "==", true));
-
     try {
-      const querySnapshot = await getDocs(q);
-      const fetchedItems = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setItems(fetchedItems);
+      console.log("trying to fetch", user.user.uid);
+      const response = await axios.get(
+        `http://localhost:5000/api/users/${user.user.uid}/items?archived=true`
+      );
+
+      setItems(response.data);
     } catch (error) {
       console.error("Error retrieving items:", error);
     }
   };
-
   const unArchiveItem = async (itemId) => {
-    const id = itemId.toString();
-    const itemRef = doc(db, "users", user.user.uid, "items", id);
-
     try {
-      await updateDoc(itemRef, { archived: false });
-      console.log("Item archived successfully.");
+      await axios.put(
+        `http://localhost:5000/api/users/${user.user.uid}/items/${itemId}/handleArchive`,
+        { archived: false }
+      );
+      console.log("item archived successfully");
       fetchItems();
     } catch (error) {
-      console.error("Error archiving item:", error);
+      console.error("Error updating item to archive:", error);
     }
   };
 
