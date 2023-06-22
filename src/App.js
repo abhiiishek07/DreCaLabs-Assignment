@@ -18,8 +18,6 @@ function App() {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log("in app", user);
-        user.getIdTokenResult().then((token) => console.log("token is", token));
         dispatch(addUser(user));
       } else {
         dispatch(removeUser());

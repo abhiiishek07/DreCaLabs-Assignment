@@ -1,22 +1,22 @@
 import React, { useEffect, useState, useRef } from "react";
 import Navbar from "../components/Navbar";
 import { BiMessageSquareAdd, BiMessageSquareX } from "react-icons/bi";
-// import { db } from "../firebase/FirebaseAuth";
+import { db } from "../firebase/FirebaseAuth";
 import { useSelector } from "react-redux";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-// import {
-//   getFirestore,
-//   collection,
-//   query,
-//   where,
-//   getDocs,
-//   doc,
-//   updateDoc,
-//   setDoc,
-// } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  updateDoc,
+  setDoc,
+} from "firebase/firestore";
 import { MdArchive, MdOutlineEdit } from "react-icons/md";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import axios from "axios";
@@ -52,93 +52,20 @@ function Home() {
     p: 4,
   };
 
-  // const fetchItems = async () => {
-  //   const itemsCollectionRef = collection(db, "users", user.user.uid, "items");
-  //   const q = query(itemsCollectionRef, where("archived", "==", false));
-
-  //   try {
-  //     const querySnapshot = await getDocs(q);
-  //     console.log("home");
-  //     const fetchedItems = querySnapshot.docs.map((doc) => ({
-  //       id: doc.id,
-  //       ...doc.data(),
-  //     }));
-  //     setItems(fetchedItems);
-  //   } catch (error) {
-  //     console.error("Error retrieving items in home:", error);
-  //   }
-  // };
-  // const createItem = async () => {
-  //   if (msg.length === 0) {
-  //     setAddNote(!addNote);
-  //     return;
-  //   }
-  //   const newItem = {
-  //     id: Date.now(),
-  //     title: msg,
-  //     archived: false,
-  //     publicView: true,
-  //   };
-  //   const db = getFirestore();
-  //   const itemsCollectionRef = collection(db, "users", user.user.uid, "items");
-
-  //   try {
-  //     await setDoc(doc(itemsCollectionRef, newItem.id.toString()), newItem);
-  //     setMsg("");
-  //     setAddNote(!addNote);
-  //     fetchItems();
-  //   } catch (error) {
-  //     console.error("Error adding item:", error);
-  //   }
-  // };
-  // const updateItem = async () => {
-  //   const id = selectedItem.id.toString();
-  //   const itemRef = doc(getFirestore(), "users", user.user.uid, "items", id);
-
-  //   try {
-  //     await updateDoc(itemRef, { title: valueRef.current.value });
-  //     console.log("Item updated successfully.");
-  //     fetchItems();
-  //     handleClose();
-  //   } catch (error) {
-  //     console.error("Error updating item:", error);
-  //   }
-  // };
-  // const archiveItem = async (itemId) => {
-  //   const id = itemId.toString();
-  //   const itemRef = doc(db, "users", user.user.uid, "items", id);
-
-  //   try {
-  //     await updateDoc(itemRef, { archived: true, publicView: false }); //if item is archived then it will be not shown in public page also
-  //     console.log("Item archived successfully.");
-  //     fetchItems();
-  //   } catch (error) {
-  //     console.error("Error archiving item:", error);
-  //   }
-  // };
-  // const handlePublicView = async (itemId, value) => {
-  //   const id = itemId.toString();
-  //   const itemRef = doc(db, "users", user.user.uid, "items", id);
-
-  //   try {
-  //     await updateDoc(itemRef, { publicView: value });
-  //     console.log("Item view chnaged successfully.");
-  //     fetchItems();
-  //   } catch (error) {
-  //     console.error("Error :", error);
-  //   }
-  // };
-
   const fetchItems = async () => {
-    try {
-      console.log("trying to fetch", user.user.uid);
-      const response = await axios.get(
-        `http://localhost:5000/api/users/${user.user.uid}/items?archived=false`
-      );
+    const itemsCollectionRef = collection(db, "users", user.user.uid, "items");
+    const q = query(itemsCollectionRef, where("archived", "==", false));
 
-      setItems(response.data);
+    try {
+      const querySnapshot = await getDocs(q);
+      console.log("home");
+      const fetchedItems = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setItems(fetchedItems);
     } catch (error) {
-      console.error("Error retrieving items:", error);
+      console.error("Error retrieving items in home:", error);
     }
   };
   const createItem = async () => {
@@ -146,18 +73,16 @@ function Home() {
       setAddNote(!addNote);
       return;
     }
-
     const newItem = {
+      id: Date.now(),
       title: msg,
       archived: false,
       publicView: true,
     };
+    const itemsCollectionRef = collection(db, "users", user.user.uid, "items");
 
     try {
-      await axios.post(
-        `http://localhost:5000/api/users/${user.user.uid}/items`,
-        newItem
-      );
+      await setDoc(doc(itemsCollectionRef, newItem.id.toString()), newItem);
       setMsg("");
       setAddNote(!addNote);
       fetchItems();
@@ -165,19 +90,12 @@ function Home() {
       console.error("Error adding item:", error);
     }
   };
-
   const updateItem = async () => {
-    const updatedItem = {
-      title: valueRef.current.value,
-      archived: selectedItem.archived,
-      publicView: selectedItem.publicView,
-    };
+    const id = selectedItem.id.toString();
+    const itemRef = doc(getFirestore(), "users", user.user.uid, "items", id);
 
     try {
-      await axios.put(
-        `http://localhost:5000/api/users/${user.user.uid}/items/${selectedItem.id}`,
-        updatedItem
-      );
+      await updateDoc(itemRef, { title: valueRef.current.value });
       console.log("Item updated successfully.");
       fetchItems();
       handleClose();
@@ -186,29 +104,110 @@ function Home() {
     }
   };
   const archiveItem = async (itemId) => {
+    const id = itemId.toString();
+    const itemRef = doc(db, "users", user.user.uid, "items", id);
+
     try {
-      await axios.put(
-        `http://localhost:5000/api/users/${user.user.uid}/items/${itemId}/handleArchive`,
-        { archived: true }
-      );
-      console.log("item archived successfully");
+      await updateDoc(itemRef, { archived: true, publicView: false }); //if item is archived then it will be not shown in public page also
+      console.log("Item archived successfully.");
       fetchItems();
     } catch (error) {
-      console.error("Error updating item to archive:", error);
+      console.error("Error archiving item:", error);
     }
   };
-  const handlePublicView = async (itemId, val) => {
+  const handlePublicView = async (itemId, value) => {
+    const id = itemId.toString();
+    const itemRef = doc(db, "users", user.user.uid, "items", id);
+
     try {
-      await axios.put(
-        `http://localhost:5000/api/users/${user.user.uid}/items/${itemId}/handlePublicView`,
-        { publicView: val }
-      );
-      console.log("item archived successfully");
+      await updateDoc(itemRef, { publicView: value });
+      console.log("Item view chnaged successfully.");
       fetchItems();
     } catch (error) {
-      console.error("Error updating item to archive:", error);
+      console.error("Error :", error);
     }
   };
+
+  // const fetchItems = async () => {
+  //   try {
+  //     console.log("trying to fetch", user.user.uid);
+  //     const response = await axios.get(
+  //       `http://localhost:5000/api/users/${user.user.uid}/items?archived=false`
+  //     );
+
+  //     setItems(response.data);
+  //   } catch (error) {
+  //     console.error("Error retrieving items:", error);
+  //   }
+  // };
+  // const createItem = async () => {
+  //   if (msg.length === 0) {
+  //     setAddNote(!addNote);
+  //     return;
+  //   }
+
+  //   const newItem = {
+  //     title: msg,
+  //     archived: false,
+  //     publicView: true,
+  //   };
+
+  //   try {
+  //     await axios.post(
+  //       `http://localhost:5000/api/users/${user.user.uid}/items`,
+  //       newItem
+  //     );
+  //     setMsg("");
+  //     setAddNote(!addNote);
+  //     fetchItems();
+  //   } catch (error) {
+  //     console.error("Error adding item:", error);
+  //   }
+  // };
+
+  // const updateItem = async () => {
+  //   const updatedItem = {
+  //     title: valueRef.current.value,
+  //     archived: selectedItem.archived,
+  //     publicView: selectedItem.publicView,
+  //   };
+
+  //   try {
+  //     await axios.put(
+  //       `http://localhost:5000/api/users/${user.user.uid}/items/${selectedItem.id}`,
+  //       updatedItem
+  //     );
+  //     console.log("Item updated successfully.");
+  //     fetchItems();
+  //     handleClose();
+  //   } catch (error) {
+  //     console.error("Error updating item:", error);
+  //   }
+  // };
+  // const archiveItem = async (itemId) => {
+  //   try {
+  //     await axios.put(
+  //       `http://localhost:5000/api/users/${user.user.uid}/items/${itemId}/handleArchive`,
+  //       { archived: true }
+  //     );
+  //     console.log("item archived successfully");
+  //     fetchItems();
+  //   } catch (error) {
+  //     console.error("Error updating item to archive:", error);
+  //   }
+  // };
+  // const handlePublicView = async (itemId, val) => {
+  //   try {
+  //     await axios.put(
+  //       `http://localhost:5000/api/users/${user.user.uid}/items/${itemId}/handlePublicView`,
+  //       { publicView: val }
+  //     );
+  //     console.log("item archived successfully");
+  //     fetchItems();
+  //   } catch (error) {
+  //     console.error("Error updating item to archive:", error);
+  //   }
+  // };
   useEffect(() => {
     fetchItems();
   }, []);

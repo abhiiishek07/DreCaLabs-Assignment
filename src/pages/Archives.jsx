@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-// import { db } from "../firebase/FirebaseAuth";
+import { db } from "../firebase/FirebaseAuth";
 import { useSelector } from "react-redux";
-// import {
-//   collection,
-//   query,
-//   where,
-//   getDocs,
-//   doc,
-//   updateDoc,
-// } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import { MdUnarchive } from "react-icons/md";
 import axios from "axios";
 
@@ -18,27 +18,31 @@ function Archives() {
   const [items, setItems] = useState([]);
 
   const fetchItems = async () => {
-    try {
-      console.log("trying to fetch", user.user.uid);
-      const response = await axios.get(
-        `http://localhost:5000/api/users/${user.user.uid}/items?archived=true`
-      );
+    const itemsCollectionRef = collection(db, "users", user.user.uid, "items");
+    const q = query(itemsCollectionRef, where("archived", "==", true));
 
-      setItems(response.data);
+    try {
+      const querySnapshot = await getDocs(q);
+      console.log("home");
+      const fetchedItems = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setItems(fetchedItems);
     } catch (error) {
-      console.error("Error retrieving items:", error);
+      console.error("Error retrieving items in home:", error);
     }
   };
   const unArchiveItem = async (itemId) => {
+    const id = itemId.toString();
+    const itemRef = doc(db, "users", user.user.uid, "items", id);
+
     try {
-      await axios.put(
-        `http://localhost:5000/api/users/${user.user.uid}/items/${itemId}/handleArchive`,
-        { archived: false }
-      );
-      console.log("item archived successfully");
+      await updateDoc(itemRef, { archived: false, publicView: false }); //if item is archived then it will be not shown in public page also
+      console.log("Item archived successfully.");
       fetchItems();
     } catch (error) {
-      console.error("Error updating item to archive:", error);
+      console.error("Error archiving item:", error);
     }
   };
 
